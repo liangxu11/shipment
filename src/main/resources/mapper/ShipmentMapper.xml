@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.mapper.ShipmentMapper">
+
+    <select id="list" parameterType="Integer" resultType="com.example.demo.bean.ShipmentBean">
+        SELECT id, trade_id as tradeId, weight, create_date as createDate, courier_number as courierNumber
+        FROM t_shipment
+        WHERE trade_id = #{tradeId}
+    </select>
+
+    <select id="getById" parameterType="Integer" resultType="com.example.demo.bean.ShipmentBean">
+        SELECT id, trade_id as tradeId, weight, create_date as createDate, courier_number as courierNumber
+        FROM t_shipment
+        WHERE id = #{id}
+    </select>
+    <select id="listByIds" parameterType="Integer" resultType="com.example.demo.bean.ShipmentBean">
+        SELECT id ,trade_id as tradeId, weight,create_date as createDate,courier_number as courierNumber FROM
+        t_shipment
+        where 1=1
+        <if test="idList !=null and idList.size() > 0">
+            and id in
+            <foreach collection="idList" item="id" index="index"
+                     open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+    </select>
+<select id="listByCourierNumberList" parameterType="String" resultType="com.example.demo.bean.ShipmentBean">
+        SELECT id ,trade_id as tradeId, weight,create_date as createDate,courier_number as courierNumber FROM
+        t_shipment
+        where 1=1
+        <if test="courierNumberList !=null and courierNumberList.size() > 0">
+            and courier_number in
+            <foreach collection="courierNumberList" item="courierNumber" index="index"
+                     open="(" close=")" separator=",">
+                #{courierNumber}
+            </foreach>
+        </if>
+    </select>
+
+    <insert id="add" parameterType="com.example.demo.bean.ShipmentBean" useGeneratedKeys="true" keyProperty="id">
+        insert into t_shipment
+            (trade_id, weight, create_date, courier_number)
+        values (#{tradeId},
+                #{weight},
+                #{createDate},
+                #{courierNumber})
+    </insert>
+
+    <insert id="insertList" parameterType="java.util.List" useGeneratedKeys="false">
+        insert into t_shipment
+        ( trade_id,weight,create_date,courier_number)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.tradeId},
+            #{item.weight},
+            #{item.createDate},
+            #{item.courierNumber}
+            )
+        </foreach>
+    </insert>
+
+    <update id="update" parameterType="com.example.demo.bean.ShipmentBean">
+        update t_shipment
+        <set>
+            <if test="weight != null ">
+                weight=#{weight}
+            </if>
+
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByIds">
+        delete from t_shipment where id in
+        <foreach collection="idList" item="id" index="index"
+                 open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByTradeId">
+        delete from t_shipment where trade_id = #{tradeId}
+    </delete>
+
+</mapper>

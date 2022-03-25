@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.mapper.TradeMapper">
+
+    <select id="get" parameterType="String" resultType="com.example.demo.bean.TradeBean">
+        SELECT id, name, weight, create_date as createDate, remark, order_id as orderId
+        FROM t_trade
+        WHERE order_id = #{order_id}
+    </select>
+
+    <select id="getById" parameterType="Integer" resultType="com.example.demo.bean.TradeBean">
+        SELECT id, name, weight, create_date as createDate, remark, order_id as orderId
+        FROM t_trade
+        WHERE id = #{id}
+    </select>
+
+    <insert id="add" parameterType="com.example.demo.bean.TradeBean" useGeneratedKeys="true" keyProperty="id">
+        insert into t_trade(name, weight, create_date, remark, order_id)
+        values (#{name}, #{weight}, #{createDate}, #{remark}, #{orderId})
+    </insert>
+
+    <update id="update" parameterType="com.example.demo.bean.TradeBean">
+        update t_trade
+        <set>
+            <if test="remark != null and remark != ''">
+                remark = #{remark},
+            </if>
+            <if test="weight != null ">
+                weight=#{weight}
+            </if>
+
+        </set>
+        where order_id = #{orderId}
+    </update>
+
+</mapper>
