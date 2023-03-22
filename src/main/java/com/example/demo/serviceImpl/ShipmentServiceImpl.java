@@ -75,10 +75,9 @@ public class ShipmentServiceImpl implements ShipmentService {
 
         shipmentMapper.add(shipmentBean);
 
-        ShipmentRespDto shipmentRespDto = new ShipmentRespDto()
+        return new ShipmentRespDto()
                 .setWeight(tradeReqDto.getWeight())
                 .setCourierNumber(String.valueOf(timeMillis));
-        return shipmentRespDto;
     }
 
     @Override
